@@ -6,8 +6,9 @@ import "InterfaceGameObj.sol";
 abstract contract GameObject is InterfaceGameObj {
 
     uint _lifes = 5;
-    uint _defend = 0;
+    uint _defend;
     address _addressAttacker;
+    uint _valueAttack;
 
     constructor() public {
         require(tvm.pubkey() != 0, 101);
@@ -17,20 +18,22 @@ abstract contract GameObject is InterfaceGameObj {
 
     function recieveDefend(uint valueDefend) external {
         tvm.accept();
-        _defend += valueDefend;
+        _defend = valueDefend;
     }
 
     function acceptAttack(uint valueAttack) virtual override external  {
         tvm.accept();
+        _valueAttack = valueAttack;
         _addressAttacker = msg.sender;
     }
 
-    function isKilled() private pure {
-        msg.sender.transfer(0, true, 192);
+    function isKilled(address _addressAttacker) internal pure destruction{
+        tvm.accept();
+        _addressAttacker.transfer(0, true, 160);
     }
 
-    modifier destruction(uint value) {
-        require(value >= _defend);
+    modifier destruction() {
+        require(_valueAttack >= _lifes + _defend);
         _;
     }
 }

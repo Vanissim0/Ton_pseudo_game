@@ -5,8 +5,8 @@ import "GameObject.sol";
 
 contract BazeStation is GameObject {
 
-    uint _defend = 0;
-    string[] public unitArray;
+    uint _defend;
+    address[] public unitArray;
    
     constructor() public {
         require(tvm.pubkey() != 0, 101);
@@ -14,24 +14,24 @@ contract BazeStation is GameObject {
         tvm.accept();
     }
 
-    function recieveDefend(uint valueDefend) virtual external {
+    function recieveDefend(uint valueDefend) virtual external override{
         tvm.accept();
-        _defend += valueDefend;
+        _defend = valueDefend;
     }
 
-    function addUnit(address) external {
+    function addUnit(address _unitAddress) external {
         tvm.accept();
-        unitArray.push(address);
+        unitArray.push(_unitAddress);
     }
 
-    function deleteUnit(address) private {
+    function deleteUnit(uint unitNumber) private {
         tvm.accept();
-        delete unitArray(address);
+        delete unitArray[unitNumber];
     }
 
-    function destruction() private {
+    function destruction(address dest) internal {
         tvm.accept();
-        this.transfer(true, 192);
+        dest.transfer(0, true, 160);
     }
 }
 

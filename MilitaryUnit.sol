@@ -3,11 +3,12 @@ pragma AbiHeader expire;
 
 import 'GameObject.sol';
 import 'BazeStation.sol';
+import 'InterfaceGameObj.sol';
 
 contract MilitaryUnit is GameObject {
     
-    uint _attack = 0;
-    uint _defend = 0;
+    uint _attack;
+    uint _defend;
 
     constructor() BazeStation(address) public {
         tvm.accept();
@@ -16,27 +17,28 @@ contract MilitaryUnit is GameObject {
         addUnit();
     }
 
-    function Attack(address) private {
+    function Attack(InterfaceGameObj _addressAttacker) virtual public {
         tvm.accept();
+        _addressAttacker.acceptAttack(valueAttack);
     }
 
     function recieveAttack(uint valueAttack) virtual external {
         tvm.accept();
-        _attack += valueAttack;
+        _attack = valueAttack;
     }
 
     function recieveDefend(uint valueDefend) virtual external {
         tvm.accept();
-        _defend += valueDefend;
+        _defend = valueDefend;
     }
 
     function destruction1() private {
         tvm.accept();
-        this.transfer(true, 192);
+        this.transfer(true, 160);
     }
 
     function destructionFromBase() private {
         tvm.accept();
-        require(msg.pubkey == BazeStation.address);
+        require(msg.sender == BazeStation.address);
     }
 }
